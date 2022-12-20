@@ -85,5 +85,31 @@ namespace ApiPedidoVenda.Controllers
                 return StatusCode(500, new ResultadoViewModel<Pedido>("Falha interna no servidor"));
             }
         }
+
+        [HttpPut("v1/pedidos/{id:int}")]
+        public async Task<IActionResult> CancelarAsync([FromServices] ContextoPedidoVenda contexto, [FromRoute] int id)
+        {
+            try
+            {
+                var pedido = await contexto.Pedidos.FirstOrDefaultAsync(f => f.Id == id);
+
+                if (pedido == null)
+                    return BadRequest(new ResultadoViewModel<Pedido>($"Pedido de número: [{id}] não encontrado."));
+
+                pedido.Cancelado = true;
+                contexto.Pedidos.Update(pedido);
+                await contexto.SaveChangesAsync();
+
+                return Ok(new ResultadoViewModel<Pedido>(pedido));
+            }
+            catch(DbUpdateException up)
+            {
+                return StatusCode(500, new ResultadoViewModel<Pedido>("Não foi possível cancelar o pedido."));
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new ResultadoViewModel<Pedido>("Falha interna no servidor"));
+            }
+        }
     }
 }
