@@ -1951,11 +1951,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\coder\\Desktop\\ApiPedidoVenda\\ApiPedidoVenda.csproj",
+      "projectUniqueName": "C:\\Users\\coder\\source\\bertoli\\ApiPedidoVenda\\ApiPedidoVenda.csproj",
       "projectName": "ApiPedidoVenda",
-      "projectPath": "C:\\Users\\coder\\Desktop\\ApiPedidoVenda\\ApiPedidoVenda.csproj",
+      "projectPath": "C:\\Users\\coder\\source\\bertoli\\ApiPedidoVenda\\ApiPedidoVenda.csproj",
       "packagesPath": "C:\\Users\\coder\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\coder\\Desktop\\ApiPedidoVenda\\obj\\",
+      "outputPath": "C:\\Users\\coder\\source\\bertoli\\ApiPedidoVenda\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",

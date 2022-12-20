@@ -26,6 +26,9 @@ namespace ApiPedidoVenda.Data.Map
                    .HasColumnType("SMALLDATETIME")
                    .HasDefaultValueSql("GETDATE()");
 
+            builder.Property(p => p.Cancelado)
+                   .HasColumnName("Cancelado");
+
             builder.HasOne(o => o.Cliente)
                    .WithMany(m => m.Pedidos)
                    .HasConstraintName("FK_Pedido_Cliente")

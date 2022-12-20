@@ -3,6 +3,7 @@ using System;
 using ApiPedidoVenda.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPedidoVenda.Migrations
 {
     [DbContext(typeof(ContextoPedidoVenda))]
-    partial class ContextoPedidoVendaModelSnapshot : ModelSnapshot
+    [Migration("20221220192033_Pedido_Cancelado")]
+    partial class PedidoCancelado
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.1");

@@ -7,6 +7,7 @@ namespace ApiPedidoVenda.ViewModels
         public ClienteViewModel? Cliente { get; set; }
         public decimal ValorTotal { get; set; }
         public DateTime DataPedido { get; set; }
+        public bool Cancelado { get; set; }
         public List<ProdutoViewModel> Itens { get; set; } = new();
     }
 }

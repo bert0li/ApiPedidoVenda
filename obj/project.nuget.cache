@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NDDabg2EJgFnpWf3Tvgugepw00fA5Sb+N1OOlk5FJOf9WPr1HVD1uhG0ylxfk3CuGVjhM54oe2KOM+oZmSz3DQ==",
+  "dgSpecHash": "oUCa0rlLE+qhs1r3gQ/A/kC5WO89Nz/PvzAsH1fM8n7m0jDZAHQVnbB8twHPYUiopFALt5ep4XZiFAWA2yCHjA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\coder\\Desktop\\ApiPedidoVenda\\ApiPedidoVenda.csproj",
+  "projectFilePath": "C:\\Users\\coder\\source\\bertoli\\ApiPedidoVenda\\ApiPedidoVenda.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\coder\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\coder\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\7.0.1\\microsoft.aspnetcore.jsonpatch.7.0.1.nupkg.sha512",
