@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ApiPedidoVenda.Migrations
 {
     /// <inheritdoc />
-    public partial class Primeira : Migration
+    public partial class First : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,7 +48,8 @@ namespace ApiPedidoVenda.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ClienteId = table.Column<int>(type: "INTEGER", nullable: true),
                     ValorTotal = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
-                    DataPedido = table.Column<DateTime>(type: "SMALLDATETIME", nullable: false, defaultValueSql: "GETDATE()")
+                    DataPedido = table.Column<DateTime>(type: "SMALLDATETIME", nullable: false, defaultValueSql: "GETDATE()"),
+                    Cancelado = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,12 +74,12 @@ namespace ApiPedidoVenda.Migrations
                     table.ForeignKey(
                         name: "FK_PedidoItens_PedidoId",
                         column: x => x.PedidoId,
-                        principalTable: "Produto",
+                        principalTable: "Pedido",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PedidoItens_ProdutoId",
                         column: x => x.ProdutoId,
-                        principalTable: "Pedido",
+                        principalTable: "Produto",
                         principalColumn: "Id");
                 });
 
@@ -100,10 +101,10 @@ namespace ApiPedidoVenda.Migrations
                 name: "PedidoItens");
 
             migrationBuilder.DropTable(
-                name: "Produto");
+                name: "Pedido");
 
             migrationBuilder.DropTable(
-                name: "Pedido");
+                name: "Produto");
 
             migrationBuilder.DropTable(
                 name: "Cliente");

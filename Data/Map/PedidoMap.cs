@@ -31,6 +31,7 @@ namespace ApiPedidoVenda.Data.Map
 
             builder.HasOne(o => o.Cliente)
                    .WithMany(m => m.Pedidos)
+                   .HasForeignKey(m => m.ClienteId)
                    .HasConstraintName("FK_Pedido_Cliente")
                    .OnDelete(DeleteBehavior.NoAction);
 
@@ -41,13 +42,13 @@ namespace ApiPedidoVenda.Data.Map
                         "PedidoItens",
                         pedido => pedido.HasOne<Produto>()
                                         .WithMany()
-                                        .HasForeignKey("PedidoId")
-                                        .HasConstraintName("FK_PedidoItens_PedidoId")
+                                        .HasForeignKey("ProdutoId")
+                                        .HasConstraintName("FK_PedidoItens_ProdutoId")
                                         .OnDelete(DeleteBehavior.NoAction),
                         produto => produto.HasOne<Pedido>()
                                           .WithMany()
-                                          .HasForeignKey("ProdutoId")
-                                          .HasConstraintName("FK_PedidoItens_ProdutoId")
+                                          .HasForeignKey("PedidoId")
+                                          .HasConstraintName("FK_PedidoItens_PedidoId")
                                           .OnDelete(DeleteBehavior.NoAction)
                    );
         }

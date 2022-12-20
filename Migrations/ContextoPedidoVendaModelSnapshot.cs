@@ -123,14 +123,14 @@ namespace ApiPedidoVenda.Migrations
 
             modelBuilder.Entity("PedidoItens", b =>
                 {
-                    b.HasOne("ApiPedidoVenda.Models.Produto", null)
+                    b.HasOne("ApiPedidoVenda.Models.Pedido", null)
                         .WithMany()
                         .HasForeignKey("PedidoId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired()
                         .HasConstraintName("FK_PedidoItens_PedidoId");
 
-                    b.HasOne("ApiPedidoVenda.Models.Pedido", null)
+                    b.HasOne("ApiPedidoVenda.Models.Produto", null)
                         .WithMany()
                         .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.NoAction)

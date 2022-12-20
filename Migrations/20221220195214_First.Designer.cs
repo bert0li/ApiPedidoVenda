@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPedidoVenda.Migrations
 {
     [DbContext(typeof(ContextoPedidoVenda))]
-    [Migration("20221219154211_Primeira")]
-    partial class Primeira
+    [Migration("20221220195214_First")]
+    partial class First
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,10 @@ namespace ApiPedidoVenda.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Cancelado")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("Cancelado");
 
                     b.Property<int?>("ClienteId")
                         .HasColumnType("INTEGER");
@@ -122,14 +126,14 @@ namespace ApiPedidoVenda.Migrations
 
             modelBuilder.Entity("PedidoItens", b =>
                 {
-                    b.HasOne("ApiPedidoVenda.Models.Produto", null)
+                    b.HasOne("ApiPedidoVenda.Models.Pedido", null)
                         .WithMany()
                         .HasForeignKey("PedidoId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired()
                         .HasConstraintName("FK_PedidoItens_PedidoId");
 
-                    b.HasOne("ApiPedidoVenda.Models.Pedido", null)
+                    b.HasOne("ApiPedidoVenda.Models.Produto", null)
                         .WithMany()
                         .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.NoAction)
