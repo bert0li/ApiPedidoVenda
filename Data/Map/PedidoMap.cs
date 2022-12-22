@@ -29,6 +29,11 @@ namespace ApiPedidoVenda.Data.Map
             builder.Property(p => p.Cancelado)
                    .HasColumnName("Cancelado");
 
+            builder.Property(p => p.TipoPedido)
+                   .IsRequired()
+                   .HasColumnName("TipoPedido")
+                   .HasConversion<int>();
+
             builder.HasOne(o => o.Cliente)
                    .WithMany(m => m.Pedidos)
                    .HasForeignKey(m => m.ClienteId)

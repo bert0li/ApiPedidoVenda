@@ -1,4 +1,5 @@
 using ApiPedidoVenda.Data;
+using ApiPedidoVenda.Enum;
 using ApiPedidoVenda.Extensions;
 using ApiPedidoVenda.Models;
 using ApiPedidoVenda.ViewModels;
@@ -24,12 +25,12 @@ namespace ApiPedidoVenda.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Pedido>("Falha interna no servidor."));
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor."));
             }
         }
 
         [HttpGet("v1/pedidos/{id:int}")]
-        public async Task<IActionResult> ObterPorIdAsync([FromServices] ContextoPedidoVenda contexto,[FromRoute] int id)
+        public async Task<IActionResult> ObterPorIdAsync([FromServices] ContextoPedidoVenda contexto, [FromRoute] int id)
         {
             try
             {
@@ -55,10 +56,10 @@ namespace ApiPedidoVenda.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    return BadRequest(new ResultadoViewModel<Pedido>(ModelState.ObterErrosModelState()));
+                    return BadRequest(new ResultadoViewModel<string>(ModelState.ObterErrosModelState()));
 
                 if (model.Itens == null || model.Itens.Count() == 0)
-                    return BadRequest(new ResultadoViewModel<Pedido>("Pedido não tem itens."));
+                    return BadRequest(new ResultadoViewModel<string>("Pedido não tem itens."));
 
                 var pedido = new Pedido()
                 {
@@ -82,11 +83,11 @@ namespace ApiPedidoVenda.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Pedido>("Falha interna no servidor"));
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
 
-        [HttpPut("v1/pedidos/{id:int}")]
+        [HttpPut("v1/pedidos/cancelar/{id:int}")]
         public async Task<IActionResult> CancelarAsync([FromServices] ContextoPedidoVenda contexto, [FromRoute] int id)
         {
             try
@@ -94,7 +95,10 @@ namespace ApiPedidoVenda.Controllers
                 var pedido = await contexto.Pedidos.FirstOrDefaultAsync(f => f.Id == id);
 
                 if (pedido == null)
-                    return BadRequest(new ResultadoViewModel<Pedido>($"Pedido de número: [{id}] não encontrado."));
+                    return BadRequest(new ResultadoViewModel<string>($"Pedido de número: [{id}] não encontrado."));
+
+                if (pedido.Cancelado)
+                    return BadRequest(new ResultadoViewModel<string>($"Pedido de número: [{pedido.Id}] já esta cancelado"));
 
                 pedido.Cancelado = true;
                 contexto.Pedidos.Update(pedido);
@@ -102,13 +106,42 @@ namespace ApiPedidoVenda.Controllers
 
                 return Ok(new ResultadoViewModel<Pedido>(pedido));
             }
-            catch(DbUpdateException up)
+            catch (DbUpdateException up)
             {
-                return StatusCode(500, new ResultadoViewModel<Pedido>("Não foi possível cancelar o pedido."));
+                return StatusCode(500, new ResultadoViewModel<string>("Não foi possível cancelar o pedido."));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Pedido>("Falha interna no servidor"));
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
+            }
+        }
+
+        [HttpPut("v1/pedidos/transformar/{id:int}")]
+        public async Task<IActionResult> TransformarEmPedidoAsync([FromServices] ContextoPedidoVenda contexto, [FromRoute] int id)
+        {
+            try
+            {
+                var pedido = await contexto.Pedidos.FirstOrDefaultAsync(f => f.Id == id);
+
+                if (pedido == null)
+                    return BadRequest(new ResultadoViewModel<string>($"Pedido de número: [{id}] não encontrado."));
+
+                if (pedido.TipoPedido == TipoPedido.Pedido)
+                    return BadRequest(new ResultadoViewModel<string>($"Pedido de número: [{pedido.Id}] já é um Pedido."));
+
+                pedido.TipoPedido = TipoPedido.Pedido;
+                contexto.Pedidos.Update(pedido);
+                await contexto.SaveChangesAsync();
+
+                return Ok(new ResultadoViewModel<Pedido>(pedido));
+            }
+            catch (DbUpdateException up)
+            {
+                return StatusCode(500, new ResultadoViewModel<string>("Não foi possível cancelar o pedido."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
     }

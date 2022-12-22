@@ -1,3 +1,5 @@
+using ApiPedidoVenda.Enum;
+
 namespace ApiPedidoVenda.Models
 {
     public class Pedido
@@ -8,6 +10,7 @@ namespace ApiPedidoVenda.Models
         public decimal ValorTotal { get; set; }
         public DateTime DataPedido { get; set; }
         public bool Cancelado { get; set; }
+        public TipoPedido TipoPedido { get; set; }
         public List<Produto> Itens { get; set; } = new();
 
         public void AddItem(Produto item)
