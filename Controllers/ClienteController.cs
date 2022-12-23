@@ -2,6 +2,7 @@ using System;
 using ApiPedidoVenda.Data;
 using ApiPedidoVenda.Extensions;
 using ApiPedidoVenda.Models;
+using ApiPedidoVenda.Util;
 using ApiPedidoVenda.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,8 @@ namespace ApiPedidoVenda.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Cliente>("Falha interna no servidor"));
+                LogUtil.LogExceptionController(ex, "ClienteController", "ObterTodosAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
 
@@ -34,13 +36,14 @@ namespace ApiPedidoVenda.Controllers
                 var cliente = await contexto.Clientes.FirstOrDefaultAsync(f => f.Id == id);
 
                 if (cliente == null)
-                    return NotFound(new ResultadoViewModel<Cliente>($"Cliente com código: [{id}] não encontrado."));
+                    return NotFound(new ResultadoViewModel<string>($"Cliente com código: [{id}] não encontrado."));
 
                 return Ok(new ResultadoViewModel<Cliente>(cliente));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Cliente>("Falha interna no servidor"));
+                LogUtil.LogExceptionController(ex, "ClienteController", "ObterPorIdAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
 
@@ -50,7 +53,7 @@ namespace ApiPedidoVenda.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    return BadRequest(new ResultadoViewModel<Cliente>(ModelState.ObterErrosModelState()));
+                    return BadRequest(new ResultadoViewModel<string>(ModelState.ObterErrosModelState()));
 
                 var cliente = new Cliente()
                 {
@@ -66,14 +69,13 @@ namespace ApiPedidoVenda.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Cliente>("Falha interna no servidor"));
+                LogUtil.LogExceptionController(ex, "ClienteController", "IncluirAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
 
         [HttpPut("v1/clientes/{id:int}")]
-        public async Task<IActionResult> AtualizarAsync([FromServices] ContextoPedidoVenda contexto,
-                                                        [FromRoute] int id,
-                                                        [FromBody] ClienteViewModel model)
+        public async Task<IActionResult> AtualizarAsync([FromServices] ContextoPedidoVenda contexto, [FromRoute] int id, [FromBody] ClienteViewModel model)
         {
             try
             {
@@ -83,7 +85,7 @@ namespace ApiPedidoVenda.Controllers
                 var cliente = await contexto.Clientes.FirstOrDefaultAsync(f => f.Id == id);
 
                 if (cliente == null)
-                    return BadRequest(new ResultadoViewModel<Cliente>($"Cliente com código: [{id}] não encontrado."));
+                    return BadRequest(new ResultadoViewModel<string>($"Cliente com código: [{id}] não encontrado."));
 
                 cliente.Nome = model.Nome;
                 cliente.Email = model.Email;
@@ -93,13 +95,15 @@ namespace ApiPedidoVenda.Controllers
 
                 return Ok(new ResultadoViewModel<Cliente>(cliente));
             }
-            catch (DbUpdateException up)
+            catch (DbUpdateException updateException)
             {
-                return StatusCode(500, "Não foi possível alterar o cliente.");
+                LogUtil.LogExceptionController(updateException, "ClienteController", "AtualizarAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Não foi possível alterar o cliente."));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Cliente>("Falha interna no servidor"));
+                LogUtil.LogExceptionController(ex, "ClienteController", "AtualizarAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
 
@@ -111,20 +115,22 @@ namespace ApiPedidoVenda.Controllers
                 var cliente = await contexto.Clientes.FirstOrDefaultAsync(f => f.Id == id);
 
                 if (cliente == null)
-                    return BadRequest(new ResultadoViewModel<Cliente>($"Cliente com código: [{id}] não encontrado."));
+                    return BadRequest(new ResultadoViewModel<string>($"Cliente com código: [{id}] não encontrado."));
 
                 contexto.Clientes.Remove(cliente);
                 await contexto.SaveChangesAsync();
 
                 return Ok(new ResultadoViewModel<Cliente>(cliente));
             }
-            catch (DbUpdateException up)
+            catch (DbUpdateException updateException)
             {
-                return StatusCode(500, "Não foi possível excluir o cliente.");
+                LogUtil.LogExceptionController(updateException, "ClienteController", "DeletarAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Não foi possível excluir o cliente."));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Cliente>("Falha interna no servidor"));
+                LogUtil.LogExceptionController(ex, "ClienteController", "DeletarAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
     }

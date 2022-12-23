@@ -1,6 +1,7 @@
 using ApiPedidoVenda.Data;
 using ApiPedidoVenda.Extensions;
 using ApiPedidoVenda.Models;
+using ApiPedidoVenda.Util;
 using ApiPedidoVenda.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,8 @@ namespace ApiPedidoVenda.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Produto>("Falha interna no servidor"));
+                LogUtil.LogExceptionController(ex, "ProdutoController", "ObterTodosAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
 
@@ -33,13 +35,14 @@ namespace ApiPedidoVenda.Controllers
                 var produto = await contexto.Produtos.FirstOrDefaultAsync(f => f.Id == id);
 
                 if (produto == null)
-                    return BadRequest(new ResultadoViewModel<Produto>($"Produto com código [{id}] não encontrado."));
+                    return BadRequest(new ResultadoViewModel<string>($"Produto com código [{id}] não encontrado."));
 
                 return Ok(new ResultadoViewModel<Produto>(produto));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Produto>("Falha interna no servidor"));
+                LogUtil.LogExceptionController(ex, "ProdutoController", "ObterPorIdAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
 
@@ -49,7 +52,7 @@ namespace ApiPedidoVenda.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    return BadRequest(new ResultadoViewModel<Produto>(ModelState.ObterErrosModelState()));
+                    return BadRequest(new ResultadoViewModel<string>(ModelState.ObterErrosModelState()));
 
                 var produto = new Produto()
                 {
@@ -66,7 +69,8 @@ namespace ApiPedidoVenda.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Produto>("Falha interna no servidor."));
+                LogUtil.LogExceptionController(ex, "ProdutoController", "IncluirAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor."));
             }
         }
 
@@ -76,12 +80,12 @@ namespace ApiPedidoVenda.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    return BadRequest(new ResultadoViewModel<Produto>(ModelState.ObterErrosModelState()));
+                    return BadRequest(new ResultadoViewModel<string>(ModelState.ObterErrosModelState()));
 
                 var produto = await contexto.Produtos.FirstOrDefaultAsync(f => f.Id == id);
 
                 if (produto == null)
-                    return BadRequest(new ResultadoViewModel<Produto>($"Produto com código: [{id}] não encontrado."));
+                    return BadRequest(new ResultadoViewModel<string>($"Produto com código: [{id}] não encontrado."));
 
                 produto.Nome = model.Nome;
                 produto.Valor = model.Valor;
@@ -92,13 +96,15 @@ namespace ApiPedidoVenda.Controllers
 
                 return Ok(new ResultadoViewModel<Produto>(produto));
             }
-            catch (DbUpdateException up)
+            catch (DbUpdateException updateException)
             {
-                return StatusCode(500, new ResultadoViewModel<Produto>("Não foi possível alterar o produto."));
+                LogUtil.LogExceptionController(updateException, "ProdutoController", "AtualizarAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Não foi possível alterar o produto."));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Produto>("Falha interna no servidor"));
+                LogUtil.LogExceptionController(ex, "ProdutoController", "AtualizarAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
 
@@ -110,20 +116,22 @@ namespace ApiPedidoVenda.Controllers
                 var produto = await contexto.Produtos.FirstOrDefaultAsync(f => f.Id == id);
 
                 if (produto == null)
-                    return BadRequest(new ResultadoViewModel<Produto>($"Produto com código: [{id}] não encontrado."));
+                    return BadRequest(new ResultadoViewModel<string>($"Produto com código: [{id}] não encontrado."));
 
                 contexto.Produtos.Remove(produto);
                 await contexto.SaveChangesAsync();
 
                 return Ok(new ResultadoViewModel<Produto>(produto));
             }
-            catch (DbUpdateException up)
+            catch (DbUpdateException updateException)
             {
-                return StatusCode(500, new ResultadoViewModel<Produto>("Não foi possível excluir o produto."));
+                LogUtil.LogExceptionController(updateException, "ProdutoController", "DeletarAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Não foi possível excluir o produto."));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Produto>("Falha interna no servidor."));
+                LogUtil.LogExceptionController(ex, "ProdutoController", "DeletarAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor."));
             }
         }
     }

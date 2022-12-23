@@ -2,6 +2,7 @@ using ApiPedidoVenda.Data;
 using ApiPedidoVenda.Enum;
 using ApiPedidoVenda.Extensions;
 using ApiPedidoVenda.Models;
+using ApiPedidoVenda.Util;
 using ApiPedidoVenda.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace ApiPedidoVenda.Controllers
             }
             catch (Exception ex)
             {
+                LogUtil.LogExceptionController(ex, "PedidoController", "ObterTodosAsync");
                 return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor."));
             }
         }
@@ -46,7 +48,8 @@ namespace ApiPedidoVenda.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResultadoViewModel<Pedido>("Falha interna no servidor"));
+                LogUtil.LogExceptionController(ex, "PedidoController", "ObterPorIdAsync");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
 
@@ -83,6 +86,7 @@ namespace ApiPedidoVenda.Controllers
             }
             catch (Exception ex)
             {
+                LogUtil.LogExceptionController(ex, "PedidoController", "IncluirAsync");
                 return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
@@ -106,12 +110,14 @@ namespace ApiPedidoVenda.Controllers
 
                 return Ok(new ResultadoViewModel<Pedido>(pedido));
             }
-            catch (DbUpdateException up)
+            catch (DbUpdateException updateException)
             {
+                LogUtil.LogExceptionController(updateException, "PedidoController", "CancelarAsync");
                 return StatusCode(500, new ResultadoViewModel<string>("Não foi possível cancelar o pedido."));
             }
             catch (Exception ex)
             {
+                LogUtil.LogExceptionController(ex, "PedidoController", "CancelarAsync");
                 return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
@@ -135,12 +141,14 @@ namespace ApiPedidoVenda.Controllers
 
                 return Ok(new ResultadoViewModel<Pedido>(pedido));
             }
-            catch (DbUpdateException up)
+            catch (DbUpdateException updateException)
             {
+                LogUtil.LogExceptionController(updateException, "PedidoController", "TransformarEmPedidoAsync");
                 return StatusCode(500, new ResultadoViewModel<string>("Não foi possível cancelar o pedido."));
             }
             catch (Exception ex)
             {
+                LogUtil.LogExceptionController(ex, "PedidoController", "TransformarEmPedidoAsync");
                 return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }

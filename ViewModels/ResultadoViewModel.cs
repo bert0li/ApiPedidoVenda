@@ -2,7 +2,7 @@ namespace ApiPedidoVenda.ViewModels
 {
     public class ResultadoViewModel<T> where T : class
     {
-        public T Entidade { get; set; }
+        public T Entidade { get; set; } = null!;
         public List<string> Erros { get; private set; } = new();
 
         public ResultadoViewModel(T entidade, List<string> erros)

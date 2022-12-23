@@ -11,13 +11,15 @@ namespace ApiPedidoVenda.Data
         public DbSet<Pedido> Pedidos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-           => optionsBuilder.UseSqlite(@"DataSource=app.db;Cache=Shared").LogTo(Console.Write);
+           => optionsBuilder.UseSqlite(@"DataSource=app.db;Cache=Shared")
+                            .LogTo(Console.Write);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new PedidoMap());
-            modelBuilder.ApplyConfiguration(new ProdutoMap());
-            modelBuilder.ApplyConfiguration(new ClienteMap());
+            //modelBuilder.ApplyConfiguration(new PedidoMap());
+            //modelBuilder.ApplyConfiguration(new ProdutoMap());
+            //modelBuilder.ApplyConfiguration(new ClienteMap());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ContextoPedidoVenda).Assembly);
         }
     }
 }

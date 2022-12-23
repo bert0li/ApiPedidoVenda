@@ -8,7 +8,7 @@ namespace ApiPedidoVenda.ViewModels
         
         [Required(ErrorMessage = "O nome é obrigatório.")]
         [StringLength(80, MinimumLength = 3, ErrorMessage = "O nome deve ter entre 3 e 80 caracteres.")]
-        public string Nome { get; set; }
+        public string Nome { get; set; } = null!;
 
         [Required(ErrorMessage = "O valor é obrigatório.")]
         [Range(1, 9999999999999999.99, ErrorMessage = "Valor deve ser maior do que 0 e menor que 9999999999999999.99.")]
