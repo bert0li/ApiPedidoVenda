@@ -152,5 +152,31 @@ namespace ApiPedidoVenda.Controllers
                 return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
             }
         }
+
+        [HttpGet("v1/pedidos/pesquisar/")]
+        public async Task<IActionResult> ObterPedidoPorPeriodo([FromServices] ContextoPedidoVenda contexto, [FromBody] PedidoPorPeriodoViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                    return BadRequest(new ResultadoViewModel<string>(ModelState.ObterErrosModelState()));
+
+                var pedidos = await contexto.Pedidos
+                                            .Include(i => i.Cliente)
+                                            .Include(i => i.Itens)
+                                            .Where(w => w.DataPedido >= model.DataInicio && w.DataPedido <= model.DataFim)
+                                            .ToListAsync();
+
+                if (pedidos == null)
+                    return BadRequest(new ResultadoViewModel<string>("Não existem pedidos entre o período especificado."));
+
+                return Ok(new ResultadoViewModel<IEnumerable<Pedido>>(pedidos));
+            }
+            catch (Exception ex)
+            {
+                LogUtil.LogExceptionController(ex, "PedidoController", "ObterPedidoPorPeriodo");
+                return StatusCode(500, new ResultadoViewModel<string>("Falha interna no servidor"));
+            }
+        }
     }
 }
