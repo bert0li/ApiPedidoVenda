@@ -10,9 +10,11 @@ namespace ApiPedidoVenda.Data
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-           => optionsBuilder.UseSqlite(@"DataSource=app.db;Cache=Shared")
-                            .LogTo(Console.Write);
+        public ContextoPedidoVenda(DbContextOptions<ContextoPedidoVenda> options) : base(options) { }
+
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //    => optionsBuilder.UseSqlite(@"DataSource=app.db;Cache=Shared")
+        //                     .LogTo(Console.Write);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,4 +1,5 @@
 using ApiPedidoVenda.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +8,8 @@ builder.Services.AddControllers()
                 .AddNewtonsoftJson(json => json.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .ConfigureApiBehaviorOptions(o => o.SuppressModelStateInvalidFilter = true);
 
-builder.Services.AddDbContext<ContextoPedidoVenda>();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ContextoPedidoVenda>(o => o.UseSqlite(connectionString).LogTo(Console.Write));
 
 builder.Services.AddSwaggerGen(s =>
 {
