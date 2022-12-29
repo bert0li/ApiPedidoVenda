@@ -12,12 +12,16 @@ namespace ApiPedidoVenda.Controllers
     [ApiController]
     public class ClienteController : ControllerBase
     {
+        ///.../v1/clientes?numeroDaPagina=1&itensPorPagina=10
         [HttpGet("v1/clientes")]
-        public async Task<IActionResult> ObterTodosAsync([FromServices] ContextoPedidoVenda contexto)
+        public async Task<IActionResult> ObterTodosAsync([FromServices] ContextoPedidoVenda contexto, [FromQuery] int numeroDaPagina = 0, [FromQuery] int itensPorPagina = 20)
         {
             try
             {
-                var clientes = await contexto.Clientes.ToListAsync();
+                var clientes = await contexto.Clientes
+                                             .Skip(numeroDaPagina * itensPorPagina)
+                                             .Take(itensPorPagina)
+                                             .ToListAsync();
 
                 return Ok(new ResultadoViewModel<IEnumerable<Cliente>>(clientes));
             }

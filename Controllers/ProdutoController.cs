@@ -11,12 +11,16 @@ namespace ApiPedidoVenda.Controllers
     [ApiController]
     public class ProdutoController : ControllerBase
     {
+        ///.../v1/produtos?numeroDaPagina=1&itensPorPagina=10
         [HttpGet("v1/produtos")]
-        public async Task<IActionResult> ObterTodosAsync([FromServices] ContextoPedidoVenda contexto)
+        public async Task<IActionResult> ObterTodosAsync([FromServices] ContextoPedidoVenda contexto, [FromQuery] int numeroDaPagina = 0, [FromQuery] int itensPorPagina = 20)
         {
             try
             {
-                var produtos = await contexto.Produtos.ToListAsync();
+                var produtos = await contexto.Produtos
+                                             .Skip(numeroDaPagina * itensPorPagina)
+                                             .Take(itensPorPagina)
+                                             .ToListAsync();
 
                 return Ok(new ResultadoViewModel<IEnumerable<Produto>>(produtos));
             }

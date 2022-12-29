@@ -12,14 +12,18 @@ namespace ApiPedidoVenda.Controllers
     [ApiController]
     public class PedidoController : ControllerBase
     {
+        ///.../v1/pedidos?numeroDaPagina=1&itensPorPagina=10
         [HttpGet("v1/pedidos")]
-        public async Task<IActionResult> ObterTodosAsync([FromServices] ContextoPedidoVenda contexto)
+        public async Task<IActionResult> ObterTodosAsync([FromServices] ContextoPedidoVenda contexto, [FromQuery] int numeroDaPagina = 0, [FromQuery] int itensPorPagina = 20)
         {
             try
             {
                 var pedidos = await contexto.Pedidos
+                                            .AsNoTracking()
                                             .Include(i => i.Cliente)
                                             .Include(i => i.Itens)
+                                            .Skip(numeroDaPagina * itensPorPagina)
+                                            .Take(itensPorPagina)
                                             .ToListAsync();
 
                 return Ok(new ResultadoViewModel<IEnumerable<Pedido>>(pedidos));
@@ -158,7 +162,7 @@ namespace ApiPedidoVenda.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                     return BadRequest(new ResultadoViewModel<string>(ModelState.ObterErrosModelState()));
 
                 var pedidos = await contexto.Pedidos
