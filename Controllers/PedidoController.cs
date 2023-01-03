@@ -158,7 +158,7 @@ namespace ApiPedidoVenda.Controllers
         }
 
         [HttpGet("v1/pedidos/pesquisar/")]
-        public async Task<IActionResult> ObterPedidoPorPeriodo([FromServices] ContextoPedidoVenda contexto, [FromBody] PedidoPorPeriodoViewModel model)
+        public async Task<IActionResult> ObterPedidoPorPeriodo([FromServices] ContextoPedidoVenda contexto, [FromBody] PedidoPorPeriodoViewModel model, int numeroDaPagina = 0, [FromQuery] int itensPorPagina = 20)
         {
             try
             {
@@ -169,6 +169,8 @@ namespace ApiPedidoVenda.Controllers
                                             .Include(i => i.Cliente)
                                             .Include(i => i.Itens)
                                             .Where(w => w.DataPedido >= model.DataInicio && w.DataPedido <= model.DataFim)
+                                            .Skip(numeroDaPagina * itensPorPagina)
+                                            .Take(itensPorPagina)
                                             .ToListAsync();
 
                 if (pedidos == null)

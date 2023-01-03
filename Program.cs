@@ -25,7 +25,7 @@ void ConfigurarMvc(WebApplicationBuilder builder)
 void ConfigurarServicos(WebApplicationBuilder builder)
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    builder.Services.AddDbContext<ContextoPedidoVenda>(o => o.UseSqlite(connectionString).LogTo(Console.Write));
+    builder.Services.AddDbContext<ContextoPedidoVenda>(o => o.UseSqlite(connectionString).LogTo(Console.WriteLine));
 }
 
 void ConfigurarSwagger(WebApplicationBuilder builder)
