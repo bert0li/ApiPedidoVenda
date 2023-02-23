@@ -1,4 +1,7 @@
 using ApiPedidoVenda.Data;
+using ApiPedidoVenda.Models;
+using ApiPedidoVenda.Repositorio;
+using ApiPedidoVenda.Repositorio.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -6,13 +9,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 ConfigurarMvc(builder);
 ConfigurarServicos(builder);
-ConfigurarSwagger(builder);
+
+if (builder.Environment.IsDevelopment())
+    ConfigurarSwagger(builder);
 
 var app = builder.Build();
 
 app.MapControllers();
-app.UseSwagger();
-app.UseSwaggerUI(s => s.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiPedidoVenda v1"));
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(s => s.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiPedidoVenda v1"));
+}
+
 app.Run();
 
 void ConfigurarMvc(WebApplicationBuilder builder)
@@ -26,6 +36,10 @@ void ConfigurarServicos(WebApplicationBuilder builder)
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     builder.Services.AddDbContext<ContextoPedidoVenda>(o => o.UseSqlite(connectionString).LogTo(Console.WriteLine));
+
+    builder.Services.AddTransient<IRepositorio<Cliente>, RepositorioCliente>();
+    builder.Services.AddTransient<IRepositorio<Produto>, RepositorioProduto>();
+    builder.Services.AddTransient<IRepositorio<Pedido>, RepositorioPedido>();
 }
 
 void ConfigurarSwagger(WebApplicationBuilder builder)
